@@ -1,8 +1,5 @@
 import socket, threading
 
-server_host = '0.0.0.0'
-server_port = 4444
-
 def listen(server_host, server_port, server_type):
     sock = socket.socket(socket.AF_INET, server_type)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -27,15 +24,22 @@ def listen(server_host, server_port, server_type):
             connection.close()
     sock.close()
 
+def create_thread(server_host, server_port, server_type):
+    t = threading.Thread(target=listen, args=(server_host, server_port, server_type))
+    t.daemon = True
+    t.start()
+
+def stop():
+    try:
+        while True:
+            pass
+    except:
+        exit('XNETCAT: Exit')
+
+
+server_host = '0.0.0.0'
+server_port = 4444
 print('XNETCAT: Listening on %s:%s' % (server_host, server_port))
-t1 = threading.Thread(target=listen, args=(server_host, server_port, socket.SOCK_STREAM))
-t1.daemon = True
-t1.start()
-t2 = threading.Thread(target=listen, args=(server_host, server_port, socket.SOCK_DGRAM))
-t2.daemon = True
-t2.start()
-try:
-    while True:
-        pass
-except:
-    exit('XNETCAT: Exit')
+create_thread(server_host, server_port, socket.SOCK_STREAM)
+create_thread(server_host, server_port, socket.SOCK_DGRAM)
+stop()
