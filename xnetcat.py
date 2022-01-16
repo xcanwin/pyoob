@@ -29,7 +29,7 @@ def create_thread(server_host, server_port, server_type):
     t.daemon = True
     t.start()
 
-def stop():
+def set_thread_tail():
     try:
         while True:
             pass
@@ -40,6 +40,6 @@ def stop():
 server_host = '0.0.0.0'
 server_port = 4444
 print('XNETCAT: Listening on %s:%s' % (server_host, server_port))
-create_thread(server_host, server_port, socket.SOCK_STREAM)
-create_thread(server_host, server_port, socket.SOCK_DGRAM)
-stop()
+for server_type in (socket.SOCK_STREAM, socket.SOCK_DGRAM):
+    create_thread(server_host, server_port, server_type)
+set_thread_tail()
