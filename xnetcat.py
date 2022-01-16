@@ -8,8 +8,8 @@ def listen(server_host, server_port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind((server_host, server_port))
-    sock.listen(5)
     while True:
+        sock.listen(1)
         connection, (client_host, client_port) = sock.accept()
         result_from = '\n\nXNETCAT: Connection from %s:%s\n' % (client_host, client_port)
         result = result_from.encode()
@@ -18,6 +18,7 @@ def listen(server_host, server_port):
         print(result.decode('utf-8', 'ignore'))
         open('xnetcat.log', 'ab').write(result)
         connection.close()
+    sock.close()
 
 t = threading.Thread(target=listen, args=(server_host, server_port))
 t.daemon = True
