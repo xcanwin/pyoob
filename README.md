@@ -35,6 +35,7 @@
 ## 用法
 
 ```
+curl -fsSL https://github.com/xcanwin/XNetcat/raw/main/xnetcat.py > xnetcat.py
 python xnetcat.py
 python xnetcat.py -P 4444
 python xnetcat.py -H 0.0.0.0 -P 4444
