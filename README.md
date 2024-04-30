@@ -1,6 +1,6 @@
 ## 简介
 
-- 基于Python的轻量级Netcat服务器
+- 基于Python的轻量级NetCat服务器
 - 用于接收HTTP、OOB、SSRF等多种请求
 - 同时监听TCP与UDP两种协议
 - 持续获取结果
@@ -15,8 +15,8 @@
 
 - 监听端口, 输出接收到的数据.
 - 同时支持TCP与UDP.
-- 功能类似于ncat的TCP服务端 ncat -l -k -v -o netcat.log --append-output -p 4444
-- 同时类似于ncat的UDP服务端 ncat -l -k -v -o netcat.log --append-output -p 4444 -u
+- 功能类似于ncat的TCP服务端 ncat -l -k -v -o pyoob.log --append-output -p 4444
+- 同时类似于ncat的UDP服务端 ncat -l -k -v -o pyoob.log --append-output -p 4444 -u
 - 时刻监听同一端口, 可不限制地接收客户端新建的请求.
 - 收到请求后立即断开, 避免占用靶机的程序线程和网络连接.
 - 记录历史请求, 保存请求原文.
@@ -35,9 +35,9 @@
 ## 用法
 
 ```
-curl -fsSL https://github.com/xcanwin/XNetcat/raw/main/xnetcat.py > xnetcat.py
-python xnetcat.py
-python xnetcat.py -P 4444
-python xnetcat.py -H 0.0.0.0 -P 4444
-python xnetcat.py -H 0.0.0.0 -P 4444 -L xnetcat.log
+curl -fsSL https://github.com/xcanwin/pyoob/raw/main/pyoob.py > pyoob.py
+python pyoob.py
+python pyoob.py -P 4444
+python pyoob.py -H 0.0.0.0 -P 4444
+python pyoob.py -H 0.0.0.0 -P 4444 -L pyoob.log
 ```
