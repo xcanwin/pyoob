@@ -1,9 +1,9 @@
 import socket, threading, argparse
 
-def listen(server_host, server_port, server_xcanwin, log_file):
-    sock = socket.socket(socket.AF_INET, server_xcanwin)
+def listen(source_addr, source_port, source_xcanwin, output):
+    sock = socket.socket(socket.AF_INET, source_xcanwin)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    sock.bind((server_host, server_port))
+    sock.bind((source_addr, source_port))
     while True:
         if sock.type == socket.SOCK_STREAM:
             client_type = 'TCP'
@@ -19,13 +19,13 @@ def listen(server_host, server_port, server_xcanwin, log_file):
         result = result_from.encode()
         result += get_data1 + b'\n'
         print(result.decode('utf-8', 'ignore'))
-        open(log_file, 'ab').write(result)
+        open(output, 'ab').write(result)
         if sock.type == socket.SOCK_STREAM:
             connection.close()
     sock.close()
 
-def create_thread(server_host, server_port, server_xcanwin, log_file):
-    t = threading.Thread(target=listen, args=(server_host, server_port, server_xcanwin, log_file))
+def create_thread(source_addr, source_port, source_xcanwin, output):
+    t = threading.Thread(target=listen, args=(source_addr, source_port, source_xcanwin, output))
     t.daemon = True
     t.start()
 
@@ -41,15 +41,15 @@ if __name__ == '__main__':
 同时监听TCP与UDP两种协议，并且可以持续获取结果，有日志记录功能。'''
     usage_tips = '''Example:
   python %(prog)s
-  python %(prog)s -P 4444
-  python %(prog)s -H 0.0.0.0 -P 4444
-  python %(prog)s -H 0.0.0.0 -P 4444 -L pyoob.log'''
+  python %(prog)s -p 6006
+  python %(prog)s -s 0.0.0.0 -p 6006
+  python %(prog)s -s 0.0.0.0 -p 6006 -o pyoob.log'''
     parser = argparse.ArgumentParser(description = description_tips, epilog = usage_tips, formatter_class = argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('-H', '--server-host', default = '0.0.0.0', help = 'Listen host')
-    parser.add_argument('-P', '--server-port', type=int, default = 4444, help = 'Listen port')
-    parser.add_argument('-L', '--log-file', default = './pyoob.log', help = 'Log file')
+    parser.add_argument('-s', '--source-addr', default = '0.0.0.0', help = 'Listen addr')
+    parser.add_argument('-p', '--source-port', type=int, default = 6006, help = 'Listen port')
+    parser.add_argument('-o', '--output', default = './pyoob.log', help = 'Log file')
     options = parser.parse_args()
-    print('PYOOB: Listening on %s:%s' % (options.server_host, options.server_port))
-    for server_xcanwin in (socket.SOCK_STREAM, socket.SOCK_DGRAM):
-        create_thread(options.server_host, options.server_port, server_xcanwin, options.log_file)
+    print('PYOOB: Listening on %s:%s' % (options.source_addr, options.source_port))
+    for source_xcanwin in (socket.SOCK_STREAM, socket.SOCK_DGRAM):
+        create_thread(options.source_addr, options.source_port, source_xcanwin, options.output)
     set_thread_tail()
