@@ -4,10 +4,11 @@ def listen(source_addr, source_port, source_xcanwin, output):
     sock = socket.socket(socket.AF_INET, source_xcanwin)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind((source_addr, source_port))
+    if sock.type == socket.SOCK_STREAM:
+        sock.listen(1)
     while True:
         if sock.type == socket.SOCK_STREAM:
             client_type = 'TCP'
-            sock.listen(1)
             connection, (client_host, client_port) = sock.accept()
             get_data1 = connection.recv(1024*1024)
         elif sock.type == socket.SOCK_DGRAM:
@@ -17,11 +18,13 @@ def listen(source_addr, source_port, source_xcanwin, output):
             client_type = 'OTHER'
         result_from = '\n\nPYOOB: %s: Connection from %s:%s\n' % (client_type, client_host, client_port)
         result = result_from.encode()
+        if not get_data1:
+            get_data1 = b''
         result += get_data1 + b'\n'
         print(result.decode('utf-8', 'ignore'))
         open(output, 'ab').write(result)
-        if sock.type == socket.SOCK_STREAM:
-            connection.close()
+    if sock.type == socket.SOCK_STREAM:
+        connection.close()
     sock.close()
 
 def create_thread(source_addr, source_port, source_xcanwin, output):
@@ -34,7 +37,7 @@ def set_thread_tail():
         while True:
             input('')
     except:
-        exit('PYOOB: Exit')
+        exit('PYOOB: Closing connection')
 
 if __name__ == '__main__':
     description_tips = '''基于Python的轻量级NetCat服务器，用于接收HTTP、OOB、SSRF等多种请求，
