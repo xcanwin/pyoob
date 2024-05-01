@@ -37,7 +37,7 @@
 ```
 curl -fsSL https://github.com/xcanwin/pyoob/raw/main/pyoob.py > pyoob.py
 python pyoob.py
-python pyoob.py -P 4444
-python pyoob.py -H 0.0.0.0 -P 4444
-python pyoob.py -H 0.0.0.0 -P 4444 -L pyoob.log
+python pyoob.py -p 6006
+python pyoob.py -s 0.0.0.0 -p 6006
+python pyoob.py -s 0.0.0.0 -p 6006 -o pyoob.log
 ```
